@@ -1,0 +1,62 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Mouse Mover",
+            "type": "shell",
+            "command": "xcodebuild",
+            "args": [
+                "-project",
+                "MouseMover.xcodeproj",
+                "-scheme",
+                "Mouse Mover",
+                "-configuration",
+                "Debug",
+                "-destination",
+                "platform=macOS,arch=arm64",
+                "-derivedDataPath",
+                "DerivedData",
+                "-allowProvisioningUpdates",
+                "build"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": {
+                "owner": "swift",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(error|warning):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            },
+            "presentation": {
+                "reveal": "silent",
+                "panel": "shared",
+                "showReuseMessage": false
+            }
+        },
+        {
+            "label": "Build and Launch Mouse Mover",
+            "dependsOn": ["Build Mouse Mover"],
+            "dependsOrder": "sequence",
+            "type": "shell",
+            "command": "zsh",
+            "args": [
+                "${workspaceFolder}/scripts/launch-for-debug.sh",
+                "${workspaceFolder}/DerivedData/Build/Products/Debug/Mouse Mover.app"
+            ],
+            "presentation": {
+                "reveal": "silent",
+                "panel": "shared",
+                "showReuseMessage": false
+            },
+            "problemMatcher": []
+        }
+    ]
+}

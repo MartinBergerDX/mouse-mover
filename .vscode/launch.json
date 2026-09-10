@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Mouse Mover",
+            "type": "lldb",
+            "request": "attach",
+            "program": "${workspaceFolder}/DerivedData/Build/Products/Debug/Mouse Mover.app/Contents/MacOS/Mouse Mover",
+            "preLaunchTask": "Build and Launch Mouse Mover",
+            "sourceLanguages": ["swift"]
+        },
+        {
+            "name": "Mouse Mover (lldb spawn)",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/DerivedData/Build/Products/Debug/Mouse Mover.app/Contents/MacOS/Mouse Mover",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Build Mouse Mover",
+            "sourceLanguages": ["swift"],
+            "env": {
+                "OS_ACTIVITY_DT_MODE": "1",
+                "OS_ACTIVITY_MODE": "debug"
+            }
+        }
+    ]
+}
