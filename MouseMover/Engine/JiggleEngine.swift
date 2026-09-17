@@ -12,10 +12,10 @@ enum EnginePhase: Equatable, Sendable {
     case jiggling
     case finishedForToday
 
-    var menuBarSymbol: String {
+    var menuBarImage: String {
         switch self {
-        case .jiggling: "computermouse.fill"
-        default: "computermouse"
+        case .jiggling: "MenuBarFruitFill"
+        default: "MenuBarFruit"
         }
     }
 

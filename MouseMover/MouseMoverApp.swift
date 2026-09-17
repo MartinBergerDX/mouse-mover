@@ -10,8 +10,11 @@ struct MouseMoverApp: App {
             MenuBarRootView()
                 .environmentObject(model)
         } label: {
-            Image(systemName: model.phase.menuBarSymbol)
-                .symbolRenderingMode(.hierarchical)
+            Image(model.phase.menuBarImage)
+                .renderingMode(.template)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 18, height: 18)
                 .accessibilityLabel(menuBarAccessibilityLabel)
         }
         .menuBarExtraStyle(.window)

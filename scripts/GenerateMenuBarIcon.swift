@@ -2,4 +2,4 @@
 import Foundation
 
 print("Icon generation moved. Run scripts/generate-icons.sh")
-print("Switch apple/pineapple in scripts/GenerateIcons.swift (`activeFruit`).")
+print("Apple and pineapple drawings live in scripts/IconDrawing/.")
