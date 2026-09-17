@@ -57,8 +57,8 @@ struct GeneralSettingsView: View {
         switch model.phase {
         case .jiggling: "Currently jiggling the pointer."
         case .waiting(let until): "Waiting until \(until.formatted(date: .omitted, time: .shortened))."
-        case .pausedForUser: "Paused because the pointer was just moved."
-        case .waitingForIdle(let until): "On. Next jiggle at \(until.formatted(date: .omitted, time: .standard)) if the pointer stays still."
+        case .pausedForUser: "Paused because the mouse or keyboard was just used."
+        case .waitingForIdle(let until): "On. Next jiggle at \(until.formatted(date: .omitted, time: .standard)) if the Mac stays idle."
         case .needsPermission: "Waiting for Accessibility permission."
         case .inactiveDay: "Today is outside the selected weekdays."
         case .finishedForToday: "Today’s window has already ended."

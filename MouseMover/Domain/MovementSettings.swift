@@ -60,7 +60,7 @@ struct MovementSettings: Codable, Equatable, Sendable {
     var pattern: MovementPattern
     var restorePosition: Bool
     var pauseWhileUsingPointer: Bool
-    /// Seconds the pointer must stay still after the user moves it.
+    /// Seconds with no mouse or keyboard input after activity before the next jiggle.
     var idleGraceSeconds: Double
 
     static let `default` = MovementSettings(

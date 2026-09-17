@@ -112,7 +112,7 @@ struct MenuBarRootView: View {
         case .inactiveDay: "Idle today"
         case .waiting(let until): "Starts \(until.formatted(date: .omitted, time: .shortened))"
         case .waitingForIdle(let until): "Next jiggle \(until.formatted(date: .omitted, time: .standard))"
-        case .pausedForUser: "Paused while you move"
+        case .pausedForUser: "Paused while you type or move"
         case .jiggling: "Jiggling"
         case .finishedForToday: "Done for today"
         }
@@ -124,9 +124,9 @@ struct MenuBarRootView: View {
         case .jiggling:
             return "Every \(formatSeconds(movement.intervalSeconds)), \(Int(movement.distancePixels.rounded())) px \(movement.pattern.title.lowercased())"
         case .pausedForUser:
-            return "Pointer is in use. The idle timer restarts when you stop."
+            return "Mouse or keyboard is in use. The idle timer restarts when you stop."
         case .waitingForIdle(let until):
-            return "On. Jiggles after the pointer stays still until \(until.formatted(date: .omitted, time: .standard))."
+            return "On. Jiggles after the Mac stays idle until \(until.formatted(date: .omitted, time: .standard))."
         case .waiting:
             return "Armed. The pointer stays still until today’s window opens."
         case .finishedForToday:

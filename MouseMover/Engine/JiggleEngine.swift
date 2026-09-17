@@ -120,32 +120,33 @@ final class JiggleEngine {
         pointerMonitor.endSynthetic()
     }
 
-    /// Wait until the pointer has been still for `interval`. Any real user move restarts the countdown.
+    /// Wait until there has been no real mouse or keyboard input for `interval`.
+    /// Any real user input restarts the countdown.
     private func waitForIdleInterval(_ interval: Duration) async {
         let seconds = durationSeconds(interval)
         var deadline = Date.now.addingTimeInterval(seconds)
-        var wasUsingPointer = false
+        var wasUsingInput = false
         applyPhase(.waitingForIdle(until: deadline))
         AppLog.engine.info("Idle interval \(self.intervalLog(interval), privacy: .public) started")
 
         while !Task.isCancelled {
-            let moving = pointerMonitor.secondsSinceUserActivity < 0.25
-            if moving {
+            let active = pointerMonitor.secondsSinceUserActivity < 0.25
+            if active {
                 deadline = Date.now.addingTimeInterval(seconds)
-                if !wasUsingPointer {
-                    AppLog.engine.info("Idle interval reset; pointer is in use")
+                if !wasUsingInput {
+                    AppLog.engine.info("Idle interval reset; user input in progress")
                 }
-                wasUsingPointer = true
+                wasUsingInput = true
                 applyPhase(.pausedForUser)
             } else {
-                if wasUsingPointer {
+                if wasUsingInput {
                     deadline = Date.now.addingTimeInterval(seconds)
-                    AppLog.engine.info("Pointer still; idle interval restarted")
+                    AppLog.engine.info("Input idle; idle interval restarted")
                 }
-                wasUsingPointer = false
+                wasUsingInput = false
                 applyPhase(.waitingForIdle(until: deadline))
                 if Date.now >= deadline {
-                    AppLog.engine.info("Idle interval elapsed; pointer has been still")
+                    AppLog.engine.info("Idle interval elapsed; no user input")
                     return
                 }
             }

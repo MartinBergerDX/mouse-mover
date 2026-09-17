@@ -25,7 +25,7 @@ struct MovementSettingsView: View {
                     range: 0.5...60,
                     step: 0.5,
                     format: "%.1f s",
-                    help: "Stillness required before the next jiggle. Moving the pointer restarts this countdown."
+                    help: "Stillness required before the next jiggle. Mouse or keyboard input restarts this countdown."
                 )
                 FineSlider(
                     title: "Interval jitter",
@@ -82,7 +82,7 @@ struct MovementSettingsView: View {
 
             Section {
                 Toggle("Return to the original position", isOn: $model.settings.movement.restorePosition)
-                Toggle("Pause while I am using the pointer", isOn: $model.settings.movement.pauseWhileUsingPointer)
+                Toggle("Pause while I am using the Mac", isOn: $model.settings.movement.pauseWhileUsingPointer)
                 if model.settings.movement.pauseWhileUsingPointer {
                     FineSlider(
                         title: "Idle grace",
@@ -90,7 +90,7 @@ struct MovementSettingsView: View {
                         range: 0.5...10,
                         step: 0.5,
                         format: "%.1f s",
-                        help: "After you stop moving the pointer, wait this long before the next jiggle. Moving the mouse restarts this countdown."
+                        help: "After you stop typing or moving the pointer, wait this long before the next jiggle. Any input restarts this countdown."
                     )
                 }
             } header: {

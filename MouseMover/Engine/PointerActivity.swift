@@ -34,9 +34,20 @@ final class PointerActivityMonitor: @unchecked Sendable {
     private var loggedFirstTapEvent = false
     private var didStart = false
 
+    private static let nsInputMask: NSEvent.EventTypeMask = [
+        .keyDown,
+        .flagsChanged,
+        .leftMouseDown,
+        .rightMouseDown,
+        .otherMouseDown,
+        .scrollWheel,
+    ]
+
     private var locationTimer: Timer?
     private var tap: CFMachPort?
     private var tapSource: CFRunLoopSource?
+    private var globalInputMonitor: Any?
+    private var localInputMonitor: Any?
 
     var lastUserActivity: Date {
         lock.lock()
@@ -82,9 +93,13 @@ final class PointerActivityMonitor: @unchecked Sendable {
         lock.unlock()
     }
 
-    func noteUserActivity(source: String, detail: String = "") {
+    func noteUserActivity(
+        source: String,
+        detail: String = "",
+        ignoreSynthetic: Bool = true
+    ) {
         lock.lock()
-        let ignoring = ignoringSynthetic
+        let ignoring = ignoreSynthetic && ignoringSynthetic
         let previous = lastActivity
         if !ignoring {
             lastActivity = .now
@@ -93,7 +108,7 @@ final class PointerActivityMonitor: @unchecked Sendable {
         guard !ignoring else { return }
         let gap = Date.now.timeIntervalSince(previous)
         if gap > 1 {
-            AppLog.engine.info("Pointer interrupt (\(source, privacy: .public))\(detail, privacy: .public); resetting idle interval")
+            AppLog.engine.info("User interrupt (\(source, privacy: .public))\(detail, privacy: .public); resetting idle interval")
         }
     }
 
@@ -135,8 +150,30 @@ final class PointerActivityMonitor: @unchecked Sendable {
         guard !didStart else { return }
         didStart = true
         startLocationPolling()
+        installNSEventMonitors()
         installEventTap()
         logListenPermission()
+    }
+
+    private func installNSEventMonitors() {
+        guard globalInputMonitor == nil, localInputMonitor == nil else { return }
+
+        globalInputMonitor = NSEvent.addGlobalMonitorForEvents(matching: Self.nsInputMask) { [weak self] event in
+            self?.handleNSEvent(event)
+        }
+        localInputMonitor = NSEvent.addLocalMonitorForEvents(matching: Self.nsInputMask) { [weak self] event in
+            self?.handleNSEvent(event)
+            return event
+        }
+        AppLog.engine.info("Input monitors started (keyboard, clicks, scroll)")
+    }
+
+    private func handleNSEvent(_ event: NSEvent) {
+        let isKeyboard = event.type == .keyDown || event.type == .flagsChanged
+        noteUserActivity(
+            source: event.type.activityLogName,
+            ignoreSynthetic: !isKeyboard
+        )
     }
 
     private func startLocationPolling() {
@@ -208,6 +245,20 @@ final class PointerActivityMonitor: @unchecked Sendable {
     private func logListenPermission() {
         let listen = IOHIDCheckAccess(kIOHIDRequestTypeListenEvent)
         AppLog.engine.info("Input Monitoring (listen) access=\(listen.rawValue) (0=granted, 1=denied, 2=unknown)")
+    }
+}
+
+extension NSEvent.EventType {
+    nonisolated var activityLogName: String {
+        switch self {
+        case .keyDown: "key"
+        case .flagsChanged: "modifier"
+        case .leftMouseDown: "leftDown"
+        case .rightMouseDown: "rightDown"
+        case .otherMouseDown: "otherDown"
+        case .scrollWheel: "scroll"
+        default: "event(\(rawValue))"
+        }
     }
 }
 
