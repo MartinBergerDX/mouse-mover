@@ -1,6 +1,6 @@
 # Mouse Mover
 
-A native macOS menu-bar app that nudges the pointer on a schedule so the Mac does not look idle. It lives in the menu bar (no Dock icon) and only synthesizes movement after the pointer has been still.
+A native macOS menu-bar app that nudges the pointer on a schedule so the Mac does not look idle. It lives in the menu bar (no Dock icon) and only synthesizes movement after the Mac has been idle.
 
 Requires **macOS 15** and **Accessibility** permission.
 
@@ -10,9 +10,10 @@ Requires **macOS 15** and **Accessibility** permission.
 - Movement patterns: horizontal, vertical, diagonal, circle, figure-eight, random direction
 - Interval, distance, duration, smoothness, and jitter
 - Optional restore to the original pointer position
-- Pause while you use the pointer; the idle countdown resets on real movement
+- Pause while you use the Mac; mouse, keyboard, clicks, and scroll reset the idle countdown
 - Daily schedule with independent start/stop times, weekdays, and a random threshold
 - Launch at login
+- Panic quit: hold **⌃⌥⌘Q** from any app (including during a screenshare). Hold duration is set in Settings → General (0.1–5 s, default 0.6 s)
 
 ## Permissions
 
@@ -22,7 +23,11 @@ Mouse Mover must be allowed under **System Settings → Privacy & Security → A
 
 Open `MouseMover.xcodeproj` in Xcode and run the **Mouse Mover** scheme.
 
-From Cursor, use the **Mouse Mover** debug configuration (F5). That builds the signed `.app`, starts it with Launch Services (`open`), then attaches the debugger — the same TCC identity you get from Xcode. The **Mouse Mover (lldb spawn)** configuration launches the inner executable directly and typically will not receive Accessibility.
+From Cursor, pick a configuration and press F5:
+
+- **Mouse Mover (Debug)** — builds Debug, starts the signed `.app` with Launch Services (`open`), then attaches the debugger (same TCC identity as Xcode)
+- **Mouse Mover (Release)** — same launch path, output in `DerivedData/Build/Products/Release/`
+- **Mouse Mover (Debug, lldb spawn)** — launches the inner executable directly and typically will not receive Accessibility
 
 ```bash
 xcodebuild \
@@ -34,4 +39,4 @@ xcodebuild \
   build
 ```
 
-The built app is `DerivedData/Build/Products/Debug/Mouse Mover.app` (gitignored).
+Built apps are `DerivedData/Build/Products/Debug/Mouse Mover.app` and `DerivedData/Build/Products/Release/Mouse Mover.app` (gitignored).

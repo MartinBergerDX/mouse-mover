@@ -73,7 +73,7 @@ extension MovementSettings {
 
 extension AppSettings {
     var logDescription: String {
-        "enabled=\(isEnabled) launchAtLogin=\(launchAtLogin) \(movement.pattern.rawValue) schedule=\(schedule.logDescription)"
+        "enabled=\(isEnabled) launchAtLogin=\(launchAtLogin) quitHold=\(quitHotkeyHoldSeconds)s \(movement.pattern.rawValue) schedule=\(schedule.logDescription)"
     }
 }
 

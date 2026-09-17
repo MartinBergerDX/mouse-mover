@@ -8,6 +8,11 @@ final class AppModel: ObservableObject {
         didSet {
             SettingsStore.saveSettings(settings)
             logSettingsChange(from: oldValue, to: settings)
+            if oldValue.quitHotkeyHoldSeconds != settings.quitHotkeyHoldSeconds {
+                let seconds = settings.quitHotkeyHoldSeconds
+                QuitHotkeyService.shared.setHoldSeconds(seconds)
+                AppLog.app.info("Quit hotkey hold \(seconds, format: .fixed(precision: 1))s")
+            }
             if oldValue.schedule.thresholdMinutes != settings.schedule.thresholdMinutes
                 || oldValue.schedule.start != settings.schedule.start
                 || oldValue.schedule.stop != settings.schedule.stop {
@@ -50,6 +55,8 @@ final class AppModel: ObservableObject {
         if startsEngine {
             start()
         }
+        QuitHotkeyService.shared.setHoldSeconds(loaded.quitHotkeyHoldSeconds)
+        QuitHotkeyService.shared.start()
         updateSleepAssertion()
     }
 

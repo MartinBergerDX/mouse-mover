@@ -46,6 +46,26 @@ struct GeneralSettingsView: View {
             } footer: {
                 Text(statusFooter)
             }
+
+            Section {
+                LabeledContent("Shortcut") {
+                    Text("Hold \(QuitHotkeyService.displayName)")
+                        .foregroundStyle(.secondary)
+                        .monospaced()
+                }
+                FineSlider(
+                    title: "Hold duration",
+                    value: $model.settings.quitHotkeyHoldSeconds,
+                    range: AppSettings.quitHotkeyHoldRange,
+                    step: 0.1,
+                    format: "%.1f s",
+                    help: "How long you must hold the shortcut before Mouse Mover quits."
+                )
+            } header: {
+                Text("Panic quit")
+            } footer: {
+                Text("Works in any app, including while screensharing. A longer hold is harder to trigger by accident.")
+            }
         }
         .formStyle(.grouped)
         .onAppear {

@@ -29,6 +29,7 @@ struct MenuBarRootView: View {
                     NSApp.terminate(nil)
                 }
                 .keyboardShortcut("q", modifiers: .command)
+                .help("Hold \(QuitHotkeyService.displayName) from any app to quit")
             }
         }
         .padding(16)
